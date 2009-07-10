@@ -7,6 +7,9 @@ def list_categories():
   
   for category in categories:
     print category
+  
+  if not categories:
+    print "%s <category-name>" % (sys.argv[0])
 
 class Timer:
   
