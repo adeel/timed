@@ -1,3 +1,4 @@
+import sys
 import os.path
 import time
 
@@ -22,21 +23,21 @@ class Log:
   
   def __init__(self, **fields):
     self.id = fields.get('id')
-    self.name = fields.get('name')
+    self.category = fields.get('category')
     self.start = fields.get('start')
     self.end = fields.get('end')
   
-  def find(self, name=None):
+  def find(self, category=None):
     results = []
     
     lines = open(self.source).readlines()
     for id, line in enumerate(lines):
       fields = line.split()
-      if name and name != fields[0]:
+      if category and category != fields[0]:
         continue
       if fields[2] == '-':
         fields[2] = None
-      results.append(Log(id=id, name=fields[0], start=fields[1], end=fields[2]))
+      results.append(Log(id=id, category=fields[0], start=fields[1], end=fields[2]))
     
     return results
   
@@ -44,14 +45,14 @@ class Log:
     if self.id:
       return self.update()
     
-    if all((self.name, self.start)):
+    if all((self.category, self.start)):
       self.id = len(open(self.source).readlines())
       
       if self.end:
         end = self.end
       else:
         end = '-'
-      line = '%s %s %s\n' % (self.name, self.start, end)
+      line = '%s %s %s\n' % (self.category, self.start, end)
       
       open(self.source, 'a').write(line)
       
@@ -66,10 +67,11 @@ class Log:
         end = self.end
       else:
         end = '-'
-      lines[self.id] = '%s %s %s\n' % (self.name, self.start, end)
-      # print lines
+      lines[self.id] = '%s %s %s\n' % (self.category, self.start, end)
+
       open(self.source, 'w').write(''.join(lines))
   
   def __repr__(self):
-    return str({'id': self.id, 'name': self.name, 'start': self.start, 'end': self.end})
+    return str({'id': self.id, 'category': self.category, 'start': self.start, 'end': self.end})
   
+
