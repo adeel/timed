@@ -1,6 +1,16 @@
 import sys
 import os.path
-import time
+import datetime, time
+
+def get_elapsed_time(since):
+  hour, min = (int(x) for x in since.split(':'))
+  now = datetime.datetime.now()
+  then = datetime.datetime(now.year, now.month, now.day, hour, min)
+  
+  delta = (now - then)
+  hour = delta.seconds / 3600
+  min = (delta.seconds - 3600 * hour) / 60
+  return '%s:%s' % (hour, min)
 
 def list_categories():
   categories = sorted(tuple(set(log.category for log in Log().find())))
@@ -93,7 +103,13 @@ class Log:
 if __name__ == '__main__':
   
   if len(sys.argv) == 1:
-    list_categories()
+    last = Log().find()[-1]
+    if not last.end:
+      print 'working on: %s' % last.category
+      print 'started: %s' % last.start
+      print 'time elapsed: %s' % get_elapsed_time(last.start)
+    else:
+      print 'not working on anything'
     
   elif len(sys.argv) == 2:
     Log(category=sys.argv[1], start=time.strftime('%H:%M')).save()
