@@ -2,6 +2,12 @@ import sys
 import os.path
 import time
 
+def list_categories():
+  categories = sorted(tuple(set(log.category for log in Log().find())))
+  
+  for category in categories:
+    print category
+
 class Timer:
   
   def __init__(self, name):
@@ -74,4 +80,6 @@ class Log:
   def __repr__(self):
     return str({'id': self.id, 'category': self.category, 'start': self.start, 'end': self.end})
   
-
+if __name__ == '__main__':
+  if len(sys.argv) == 1:
+    list_categories()
