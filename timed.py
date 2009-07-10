@@ -39,11 +39,18 @@ class Log:
     lines = open(self.source).readlines()
     for id, line in enumerate(lines):
       fields = line.split()
+
+      if not len(fields) == 3:
+        break
+
       if category and category != fields[0]:
         continue
+
       if fields[2] == '-':
         fields[2] = None
-      results.append(Log(id=id, category=fields[0], start=fields[1], end=fields[2]))
+
+      results.append(Log(id=id, category=fields[0], start=fields[1],
+                                                      end=fields[2]))
     
     return results
   
