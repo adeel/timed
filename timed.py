@@ -2,15 +2,21 @@ import sys
 import os.path
 import datetime, time
 
-def get_elapsed_time(since):
-  hour, min = (int(x) for x in since.split(':'))
-  now = datetime.datetime.now()
-  then = datetime.datetime(now.year, now.month, now.day, hour, min)
+def get_summary():
+  summary = {}
+  for log in Log().find():
+    if not summary.has_key(log.category):
+      summary[log.category] = 0
+    summary[log.category] += (Time(log.end) - Time(log.start)).seconds / 60
   
-  delta = (now - then)
-  hour = delta.seconds / 3600
-  min = (delta.seconds - 3600 * hour) / 60
-  return '%s:%s' % (hour, min)
+  for category, min in summary.items():
+    print "%s: %sh%sm" % (category, min/60, min - 60 * (min/60))
+
+def get_elapsed_time(start, end=None):
+  delta = (Time(end) - Time(start)).seconds
+  hour = delta / 3600
+  min = (delta - 3600 * hour) / 60
+  return '%s:%s' % (str(hour).rjust(2, '0'), str(min).rjust(2, '0'))
 
 def list_categories():
   categories = sorted(tuple(set(log.category for log in Log().find())))
@@ -21,7 +27,27 @@ def list_categories():
   if not categories:
     print "%s <category-name>" % (sys.argv[0])
 
-class Log:
+class Time(object):
+  
+  def __init__(self, strtime=None):
+    if strtime:
+      self.time = strtime
+    else:
+      self.time = time.strftime('%H:%M')
+  
+  def __sub__(self, time2):
+    return self.to_datetime() - time2.to_datetime()
+  
+  def __str__(self):
+    return self.time
+  
+  def to_datetime(self):
+    hour, minute = (int(x) for x in self.time.split(':'))
+    return datetime.datetime.now().replace(hour=hour, minute=minute,
+                                           second=0, microsecond=0)
+  
+
+class Log(object):
   
   source = os.path.expanduser('~/.timed')
   
@@ -83,7 +109,8 @@ class Log:
       open(self.source, 'w').write(''.join(lines))
   
   def __repr__(self):
-    return str({'id': self.id, 'category': self.category, 'start': self.start, 'end': self.end})
+    return str({'id': self.id, 'category': self.category, 'start': self.start,
+                'end': self.end})
   
 if __name__ == '__main__':
   
@@ -95,18 +122,14 @@ if __name__ == '__main__':
         print 'working on: %s' % last.category
         print 'started: %s' % last.start
         print 'time elapsed: %s' % get_elapsed_time(last.start)
-        exit()
-    print 'not working on anything'
-    if Log().find():
-      print
-      print '--'
-      print '\n'.join("%s %s %s" % (log.category, log.start, log.end) for log in Log().find()[-5:])
+      else:
+        get_summary()
     
   elif len(sys.argv) == 2:
     if sys.argv[1] == 'stop':
       logs = Log().find()
       if not logs:
-        print "You need to start first."
+        print "not working on anything"
       else:
         last = logs[-1]
         print last.id
@@ -117,5 +140,7 @@ if __name__ == '__main__':
 
         last.end = time.strftime('%H:%M')
         last.save()
+    elif sys.argv[1] == 'summary':
+      get_summary()
     else:
       Log(category=sys.argv[1], start=time.strftime('%H:%M')).save()
