@@ -68,7 +68,7 @@ class Log:
     return results
   
   def save(self):
-    if self.id:
+    if self.id is not None:
       return self.update()
     
     if all((self.category, self.start)):
@@ -85,7 +85,7 @@ class Log:
       return self.id
   
   def update(self):
-    if self.id:
+    if self.id is not None:
       lines = open(self.source).readlines()
       line = lines[self.id].split()
       
@@ -103,13 +103,34 @@ class Log:
 if __name__ == '__main__':
   
   if len(sys.argv) == 1:
-    last = Log().find()[-1]
-    if not last.end:
-      print 'working on: %s' % last.category
-      print 'started: %s' % last.start
-      print 'time elapsed: %s' % get_elapsed_time(last.start)
-    else:
-      print 'not working on anything'
+    logs = Log().find()
+    if logs:
+      last = logs[-1]
+      if not last.end:
+        print 'working on: %s' % last.category
+        print 'started: %s' % last.start
+        print 'time elapsed: %s' % get_elapsed_time(last.start)
+        exit()
+    print 'not working on anything'
+    if Log().find():
+      print
+      print '--'
+      print '\n'.join("%s %s %s" % (log.category, log.start, log.end) for log in Log().find()[-5:])
     
   elif len(sys.argv) == 2:
-    Log(category=sys.argv[1], start=time.strftime('%H:%M')).save()
+    if sys.argv[1] == 'stop':
+      logs = Log().find()
+      if not logs:
+        print "You need to start first."
+      else:
+        last = logs[-1]
+        print last.id
+        print 'stopped working on: %s' % last.category
+        print '--'
+        print 'started: %s' % last.start
+        print 'time spent: %s' % get_elapsed_time(last.start)
+
+        last.end = time.strftime('%H:%M')
+        last.save()
+    else:
+      Log(category=sys.argv[1], start=time.strftime('%H:%M')).save()
