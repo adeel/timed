@@ -64,26 +64,6 @@ def get_elapsed_time(start, end=None):
   min = (delta - 3600 * hour) / 60
   return '%s:%s' % (str(hour).rjust(2, '0'), str(min).rjust(2, '0'))
 
-class Time(object):
-  
-  def __init__(self, strtime=None):
-    if strtime:
-      self.time = strtime
-    else:
-      self.time = time.strftime('%H:%M')
-  
-  def __sub__(self, time2):
-    return self.to_datetime() - time2.to_datetime()
-  
-  def __str__(self):
-    return self.time
-  
-  def to_datetime(self):
-    hour, minute = (int(x) for x in self.time.split(':'))
-    return datetime.datetime.now().replace(hour=hour, minute=minute,
-                                           second=0, microsecond=0)
-  
-
 class Log(object):
   
   source = os.path.expanduser('~/.timed')
@@ -148,4 +128,24 @@ class Log(object):
   def __repr__(self):
     return str({'id': self.id, 'category': self.category, 'start': self.start,
                 'end': self.end})
+  
+
+class Time(object):
+  
+  def __init__(self, strtime=None):
+    if strtime:
+      self.time = strtime
+    else:
+      self.time = time.strftime('%H:%M')
+  
+  def __sub__(self, time2):
+    return self.to_datetime() - time2.to_datetime()
+  
+  def __str__(self):
+    return self.time
+  
+  def to_datetime(self):
+    hour, minute = (int(x) for x in self.time.split(':'))
+    return datetime.datetime.now().replace(hour=hour, minute=minute,
+                                           second=0, microsecond=0)
   
