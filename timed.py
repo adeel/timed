@@ -91,5 +91,9 @@ class Log:
     return str({'id': self.id, 'category': self.category, 'start': self.start, 'end': self.end})
   
 if __name__ == '__main__':
+  
   if len(sys.argv) == 1:
     list_categories()
+    
+  elif len(sys.argv) == 2:
+    Log(category=sys.argv[1], start=time.strftime('%H:%M')).save()
