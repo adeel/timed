@@ -1,3 +1,4 @@
+import os.path
 import time
 
 class Timer:
@@ -15,3 +16,60 @@ class Timer:
       return self.elapsed
   
 
+class Log:
+  
+  source = os.path.expanduser('~/.timed')
+  
+  def __init__(self, **fields):
+    self.id = fields.get('id')
+    self.name = fields.get('name')
+    self.start = fields.get('start')
+    self.end = fields.get('end')
+  
+  def find(self, name=None):
+    results = []
+    
+    lines = open(self.source).readlines()
+    for id, line in enumerate(lines):
+      fields = line.split()
+      if name and name != fields[0]:
+        continue
+      if fields[2] == '-':
+        fields[2] = None
+      results.append(Log(id=id, name=fields[0], start=fields[1], end=fields[2]))
+    
+    return results
+  
+  def save(self):
+    if self.id:
+      return self.update()
+    
+    if all((self.name, self.start)):
+      self.id = len(open(self.source).readlines())
+      
+      if self.end:
+        end = self.end
+      else:
+        end = '-'
+      line = '%s %s %s\n' % (self.name, self.start, end)
+      
+      open(self.source, 'a').write(line)
+      
+      return self.id
+  
+  def update(self):
+    if self.id:
+      lines = open(self.source).readlines()
+      line = lines[self.id].split()
+      
+      if self.end:
+        end = self.end
+      else:
+        end = '-'
+      lines[self.id] = '%s %s %s\n' % (self.name, self.start, end)
+      # print lines
+      open(self.source, 'w').write(''.join(lines))
+  
+  def __repr__(self):
+    return str({'id': self.id, 'name': self.name, 'start': self.start, 'end': self.end})
+  
