@@ -11,3 +11,5 @@ timed is a command-line time tracking tool.
   timed summary: print a summary of hours for all projects
 
 A complete log is stored in ~/.timed and can be edited.
+
+Installation: python setup.py install.
