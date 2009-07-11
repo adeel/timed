@@ -8,6 +8,9 @@ DATA_FILE = os.path.expanduser('~/.timed')
 def main():
   if not os.path.exists(DATA_FILE):
     open(DATA_FILE, 'w').close()
+    f = open('README')
+    print f.read()
+    f.close()
   if len(sys.argv) == 1:
     Controller().default()
   elif len(sys.argv) == 2:
