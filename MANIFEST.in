@@ -1,2 +1,2 @@
-*.py
-README
+include *.py
+include README
