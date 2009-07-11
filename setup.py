@@ -7,7 +7,7 @@ desc = f.read()
 f.close()
 
 setup(name='timed',
-      version='0.3',
+      version='0.4',
       description="command-line time tracking",
       long_description=desc,
       url='http://github.com/adeel/timed',
