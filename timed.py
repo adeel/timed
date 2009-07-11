@@ -3,7 +3,11 @@ import os.path
 import time
 import datetime
 
+DATA_FILE = os.path.expanduser('~/.timed')
+
 def main():
+  if not os.path.exists(DATA_FILE):
+    open(DATA_FILE, 'w').close()
   if len(sys.argv) == 1:
     Controller().default()
   elif len(sys.argv) == 2:
@@ -15,7 +19,6 @@ def main():
       Controller().summary()
     else:
       Controller().start(sys.argv[1])
-  
 
 class Controller(object):
   
@@ -66,7 +69,7 @@ def get_elapsed_time(start, end=None):
 
 class Log(object):
   
-  source = os.path.expanduser('~/.timed')
+  source = DATA_FILE
   
   def __init__(self, **fields):
     self.id = fields.get('id')
@@ -77,7 +80,10 @@ class Log(object):
   def find(self, category=None):
     results = []
     
-    lines = open(self.source).readlines()
+    f = open(self.source)
+    lines = f.readlines()
+    f.close()
+    
     for id, line in enumerate(lines):
       fields = line.split()
       
@@ -100,7 +106,9 @@ class Log(object):
       return self.update()
     
     if all((self.category, self.start)):
-      self.id = len(open(self.source).readlines())
+      f = open(self.source)
+      self.id = len(f.readlines())
+      f.close()
       
       if self.end:
         end = self.end
@@ -108,13 +116,17 @@ class Log(object):
         end = '-'
       line = '%s %s %s\n' % (self.category, self.start, end)
       
-      open(self.source, 'a').write(line)
+      f = open(self.source, 'a')
+      f.write(line)
+      f.close()
       
       return self.id
   
   def update(self):
     if self.id is not None:
-      lines = open(self.source).readlines()
+      f = open(self.source)
+      lines = f.readlines()
+      f.close()
       line = lines[self.id].split()
       
       if self.end:
@@ -123,7 +135,9 @@ class Log(object):
         end = '-'
       lines[self.id] = '%s %s %s\n' % (self.category, self.start, end)
       
-      open(self.source, 'w').write(''.join(lines))
+      f = open(self.source, 'w')
+      f.write(''.join(lines))
+      f.close()
   
   def __repr__(self):
     return str({'id': self.id, 'category': self.category, 'start': self.start,
