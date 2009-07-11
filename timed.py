@@ -45,6 +45,7 @@ class Controller(object):
   
   def start(self, category):
     Log(category=category, start=time.strftime('%H:%M')).save()
+    print "starting work on %s" % category
   
   def stop(self):
     logs = Log().find()
