@@ -2,15 +2,15 @@ import sys
 import os.path
 import time
 import datetime
+from pkg_resources import Requirement, resource_string
 
 DATA_FILE = os.path.expanduser('~/.timed')
+README = resource_string(Requirement.parse('timed'), 'README')
 
 def main():
   if not os.path.exists(DATA_FILE):
     open(DATA_FILE, 'w').close()
-    f = open('README')
-    print f.read()
-    f.close()
+    print README
   if len(sys.argv) == 1:
     Controller().default()
   elif len(sys.argv) == 2:
