@@ -15,4 +15,5 @@ setup(name='timed',
       author_email='adeel2@umbc.edu',
       py_modules=['timed'],
       entry_points={'console_scripts': ['timed = timed:main']},
+      include_package_data=True,
 )
