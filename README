@@ -1,0 +1,13 @@
+timed is a command-line time tracking tool.
+
+  timed: print current status
+  
+  timed <project-name>: alias for "timed start <project-name>"
+  
+  timed start <project-name>: start tracking for the <project-name> project
+  
+  timed stop: stop tracking for the current project
+  
+  timed summary: print a summary of hours for all projects
+
+A complete log is stored in ~/.timed and can be edited.
