@@ -7,12 +7,20 @@ desc = f.read()
 f.close()
 
 setup(name='timed',
-      version='1.0',
+      version='1.21',
       description="command-line time tracking",
       long_description=desc,
       url='http://github.com/adeel/timed',
       author='Adeel Ahmad Khan',
       author_email='adeel2@umbc.edu',
+      classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'License :: OSI Approved :: BSD License',
+        'Natural Language :: English',
+        'Operating System :: POSIX',
+        'Topic :: Utilities',
+      ],
       py_modules=['timed'],
       entry_points={'console_scripts': ['timed = timed:main']},
       include_package_data=True,
