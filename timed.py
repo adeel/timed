@@ -2,9 +2,11 @@ import sys
 import os.path
 import time
 import datetime
+import yaml
 from pkg_resources import Requirement, resource_string
 
 DATA_FILE = os.path.expanduser('~/.timed')
+TIME_FORMAT = '[%d %b %Y] %H:%M'
 README = resource_string(Requirement.parse('timed'), 'README')
 
 def main():
@@ -14,55 +16,63 @@ def main():
   if len(sys.argv) == 1:
     Controller().default()
   elif len(sys.argv) == 2:
-    if sys.argv[1] == 'start':
-      Controller().start(sys.argv[2])
-    elif sys.argv[1] == 'stop':
+    if sys.argv[1] == 'stop':
       Controller().stop()
     elif sys.argv[1] == 'summary':
       Controller().summary()
     else:
       Controller().start(sys.argv[1])
+  elif len(sys.argv) == 3:
+    if sys.argv[1] == 'start':
+      Controller().start(sys.argv[2])
 
 class Controller(object):
   
+  def __init__(self):
+    data = open(DATA_FILE).read()
+    self.logs = yaml.safe_load(data)
+  
   def default(self):
-    logs = Log().find()
-    if logs:
-      last = logs[-1]
-      if not last.end:
-        print 'working on: %s' % last.category
-        print 'started: %s' % last.start
-        print 'time elapsed: %s' % get_elapsed_time(last.start)
+    if self.logs:
+      last = self.logs[-1]
+      if not last.get('end'):
+        print 'working on: %s' % last['project']
+        print 'started: %s' % last.get('start')
+        print 'time elapsed: %s' % get_elapsed_time(last.get('start'))
       else:
         self.summary()
   
   def summary(self):
     summary = {}
-    for log in Log().find():
-      if not summary.has_key(log.category):
-        summary[log.category] = 0
-      summary[log.category] += (Time(log.end) - Time(log.start)).seconds / 60
+    for log in self.logs:
+      if not summary.has_key(log['project']):
+        summary[log['project']] = 0
+      summary[log['project']] += (Time(log.get('end'))
+                                - Time(log.get('start'))).seconds / 60
     
-    for category, min in summary.items():
-      print "%s: %sh%sm" % (category, min/60, min - 60 * (min/60))
+    for project, min in summary.items():
+      print "%s: %sh%sm" % (project, min/60, min - 60 * (min/60))
   
-  def start(self, category):
-    Log(category=category, start=time.strftime('%H:%M')).save()
-    print "starting work on %s" % category
+  def start(self, project):
+    self.logs.append({'project': project, 'start': time.strftime(TIME_FORMAT)})
+    self.save()
+    print "starting work on %s" % project
   
   def stop(self):
-    logs = Log().find()
-    if not logs:
+    if not self.logs:
       print "not working on anything"
     else:
-      last = logs[-1]
-      print "stopped working on: %s" % last.category
+      last = self.logs[-1]
+      print "stopped working on: %s" % last['project']
       print "--"
-      print "started: %s" % last.start
-      print "time spent: %s" % get_elapsed_time(last.start)
+      print "started: %s" % last.get('start')
+      print "time spent: %s" % get_elapsed_time(last.get('start'))
       
-      last.end = time.strftime('%H:%M')
-      last.save()
+      self.logs[-1]['end'] = time.strftime(TIME_FORMAT)
+      self.save()
+  
+  def save(self):
+    open(DATA_FILE, 'w').write(yaml.dump(self.logs, default_flow_style=False))
   
 
 def get_elapsed_time(start, end=None):
@@ -71,90 +81,13 @@ def get_elapsed_time(start, end=None):
   min = (delta - 3600 * hour) / 60
   return '%s:%s' % (str(hour).rjust(2, '0'), str(min).rjust(2, '0'))
 
-class Log(object):
-  
-  source = DATA_FILE
-  
-  def __init__(self, **fields):
-    self.id = fields.get('id')
-    self.category = fields.get('category')
-    self.start = fields.get('start')
-    self.end = fields.get('end')
-  
-  def find(self, category=None):
-    results = []
-    
-    f = open(self.source)
-    lines = f.readlines()
-    f.close()
-    
-    for id, line in enumerate(lines):
-      fields = line.split()
-      
-      if not len(fields) == 3:
-        break
-      
-      if category and category != fields[0]:
-        continue
-      
-      if fields[2] == '-':
-        fields[2] = None
-      
-      results.append(Log(id=id, category=fields[0], start=fields[1],
-                                                      end=fields[2]))
-    
-    return results
-  
-  def save(self):
-    if self.id is not None:
-      return self.update()
-    
-    if all((self.category, self.start)):
-      f = open(self.source)
-      self.id = len(f.readlines())
-      f.close()
-      
-      if self.end:
-        end = self.end
-      else:
-        end = '-'
-      line = '%s %s %s\n' % (self.category, self.start, end)
-      
-      f = open(self.source, 'a')
-      f.write(line)
-      f.close()
-      
-      return self.id
-  
-  def update(self):
-    if self.id is not None:
-      f = open(self.source)
-      lines = f.readlines()
-      f.close()
-      line = lines[self.id].split()
-      
-      if self.end:
-        end = self.end
-      else:
-        end = '-'
-      lines[self.id] = '%s %s %s\n' % (self.category, self.start, end)
-      
-      f = open(self.source, 'w')
-      f.write(''.join(lines))
-      f.close()
-  
-  def __repr__(self):
-    return str({'id': self.id, 'category': self.category, 'start': self.start,
-                'end': self.end})
-  
-
 class Time(object):
   
   def __init__(self, strtime=None):
     if strtime:
       self.time = strtime
     else:
-      self.time = time.strftime('%H:%M')
+      self.time = time.strftime(TIME_FORMAT)
   
   def __sub__(self, time2):
     return self.to_datetime() - time2.to_datetime()
@@ -163,7 +96,8 @@ class Time(object):
     return self.time
   
   def to_datetime(self):
-    hour, minute = (int(x) for x in self.time.split(':'))
-    return datetime.datetime.now().replace(hour=hour, minute=minute,
-                                           second=0, microsecond=0)
+    return datetime.datetime.strptime(self.time, TIME_FORMAT)
   
+
+if __name__ == '__main__':
+  main()
