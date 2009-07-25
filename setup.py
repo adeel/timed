@@ -25,5 +25,6 @@ setup(name='timed',
       entry_points={'console_scripts': ['timed = timed:main']},
       include_package_data=True,
       data_files=[('', ['README'])],
-      requirements=['PyYAML', 'cmdln']
+      requirements=['PyYAML'],
+      zip_safe=False,
 )
