@@ -1,82 +1,82 @@
 import sys
 import os.path
-import time
-import datetime
+import time, datetime
 import yaml
-from pkg_resources import Requirement, resource_string
+import pkg_resources
+import cmdapp
 
-DATA_FILE = os.path.expanduser('~/.timed')
 TIME_FORMAT = '[%d %b %Y] %H:%M'
-README = resource_string(Requirement.parse('timed'), 'README')
+DATA_FILE = os.path.expanduser('~/.timed')
 
 def main():
   if not os.path.exists(DATA_FILE):
-    open(DATA_FILE, 'w').close()
-    print README
-  if len(sys.argv) == 1:
-    Controller().default()
-  elif len(sys.argv) == 2:
-    if sys.argv[1] == 'stop':
-      Controller().stop()
-    elif sys.argv[1] == 'summary':
-      Controller().summary()
-    else:
-      Controller().start(sys.argv[1])
-  elif len(sys.argv) == 3:
-    if sys.argv[1] == 'start':
-      Controller().start(sys.argv[2])
+    open(DATA_FILE, 'w').close()  
+  cmdapp.main()
 
-class Controller(object):
-  
-  def __init__(self):
-    data = open(DATA_FILE).read()
-    if data:
-      self.logs = yaml.safe_load(data)
+@cmdapp.cmd
+def help():
+  readme = pkg_resources.resource_string(
+    pkg_resources.Requirement.parse('timed'), 'README')
+  print readme
+
+@cmdapp.cmd
+def index():
+  logs = read()
+  if logs:
+    last = logs[-1]
+    if not last.get('end'):
+      print 'working on: %s' % last['project']
+      print 'started: %s' % last.get('start')
+      print 'time elapsed: %s' % get_elapsed_time(last.get('start'))
     else:
-      self.logs = []
+      summary()
+  else:
+    readme()
+
+@cmdapp.cmd
+def summary():
+  logs = read()
+  summary = {}
+  for log in logs:
+    if not summary.has_key(log['project']):
+      summary[log['project']] = 0
+    summary[log['project']] += (Time(log.get('end'))
+                              - Time(log.get('start'))).seconds / 60
   
-  def default(self):
-    if self.logs:
-      last = self.logs[-1]
-      if not last.get('end'):
-        print 'working on: %s' % last['project']
-        print 'started: %s' % last.get('start')
-        print 'time elapsed: %s' % get_elapsed_time(last.get('start'))
-      else:
-        self.summary()
-  
-  def summary(self):
-    summary = {}
-    for log in self.logs:
-      if not summary.has_key(log['project']):
-        summary[log['project']] = 0
-      summary[log['project']] += (Time(log.get('end'))
-                                - Time(log.get('start'))).seconds / 60
+  for project, min in summary.items():
+    print "%s: %sh%sm" % (project, min/60, min - 60 * (min/60))
+
+@cmdapp.cmd
+def start(project):
+  logs = read()
+  logs.append({'project': project, 'start': time.strftime(TIME_FORMAT)})
+  save(logs)
+  print "starting work on %s" % project
+
+@cmdapp.cmd
+def stop():
+  logs = read()
+  if not logs:
+    print "not working on anything"
+  else:
+    last = logs[-1]
+    print "stopped working on: %s" % last['project']
+    print "--"
+    print "started: %s" % last.get('start')
+    print "time spent: %s" % get_elapsed_time(last.get('start'))
     
-    for project, min in summary.items():
-      print "%s: %sh%sm" % (project, min/60, min - 60 * (min/60))
+    logs[-1]['end'] = time.strftime(TIME_FORMAT)
+    save(logs)
+
+def read():
+  data = open(DATA_FILE).read()
+  if not data:
+    return []
   
-  def start(self, project):
-    self.logs.append({'project': project, 'start': time.strftime(TIME_FORMAT)})
-    self.save()
-    print "starting work on %s" % project
-  
-  def stop(self):
-    if not self.logs:
-      print "not working on anything"
-    else:
-      last = self.logs[-1]
-      print "stopped working on: %s" % last['project']
-      print "--"
-      print "started: %s" % last.get('start')
-      print "time spent: %s" % get_elapsed_time(last.get('start'))
-      
-      self.logs[-1]['end'] = time.strftime(TIME_FORMAT)
-      self.save()
-  
-  def save(self):
-    open(DATA_FILE, 'w').write(yaml.dump(self.logs, default_flow_style=False))
-  
+  return yaml.safe_load(data)
+
+def save(logs):
+  open(DATA_FILE, 'w').write(yaml.dump(logs, default_flow_style=False))
 
 def get_elapsed_time(start, end=None):
   delta = (Time(end) - Time(start)).seconds
@@ -100,7 +100,6 @@ class Time(object):
   
   def to_datetime(self):
     return datetime.datetime.strptime(self.time, TIME_FORMAT)
-  
 
 if __name__ == '__main__':
   main()
