@@ -5,8 +5,8 @@ import yaml
 import pkg_resources
 import cmdapp
 
-TIME_FORMAT = '[%d %b %Y] %H:%M'
 DATA_FILE = os.path.expanduser('~/.timed')
+TIME_FORMAT = '%H:%M on %d %b %Y'
 
 def main():
   if not os.path.exists(DATA_FILE):
@@ -25,9 +25,13 @@ def index():
   if logs:
     last = logs[-1]
     if not last.get('end'):
-      print 'working on: %s' % last['project']
-      print 'started: %s' % last.get('start')
-      print 'time elapsed: %s' % get_elapsed_time(last.get('start'))
+      project = last['project']
+      start = last.get('start')
+      end = datetime.datetime.now()
+      print "working on %s:" % project
+      print "  from    %s" % start.strftime(TIME_FORMAT)
+      print "  to now, %s" % end.strftime(TIME_FORMAT)
+      print "       => %s have elapsed" % elapsed_time(start, end)
     else:
       summary()
   else:
@@ -40,32 +44,38 @@ def summary():
   for log in logs:
     if not summary.has_key(log['project']):
       summary[log['project']] = 0
-    summary[log['project']] += (Time(log.get('end'))
-                              - Time(log.get('start'))).seconds / 60
+    end = log.get('end', datetime.datetime.now())
+    start = log.get('start')
+    summary[log['project']] += (end - start).seconds / 60
   
   for project, min in summary.items():
-    print "%s: %sh%sm" % (project, min/60, min - 60 * (min/60))
+    print "  - %s: %sh%sm" % (project, min/60, min - 60 * (min/60))
 
 @cmdapp.cmd
 def start(project):
   logs = read()
-  logs.append({'project': project, 'start': time.strftime(TIME_FORMAT)})
+  start = datetime.datetime.now()
+  logs.append({'project': project, 'start': start})
   save(logs)
   print "starting work on %s" % project
+  print "  at %s" % start.strftime(TIME_FORMAT)
 
 @cmdapp.cmd
 def stop():
   logs = read()
   if not logs:
-    print "not working on anything"
+    print "error: no active project"
   else:
     last = logs[-1]
-    print "stopped working on: %s" % last['project']
-    print "--"
-    print "started: %s" % last.get('start')
-    print "time spent: %s" % get_elapsed_time(last.get('start'))
+    project = last['project']
+    start = last.get('start')
+    end = datetime.datetime.now()
+    print "worked on %s" % project
+    print "  from    %s" % start.strftime(TIME_FORMAT)
+    print "  to now, %s" % end.strftime(TIME_FORMAT)
+    print "       => %s elapsed" % elapsed_time(start)
     
-    logs[-1]['end'] = time.strftime(TIME_FORMAT)
+    logs[-1]['end'] = end
     save(logs)
 
 def read():
@@ -78,28 +88,13 @@ def read():
 def save(logs):
   open(DATA_FILE, 'w').write(yaml.dump(logs, default_flow_style=False))
 
-def get_elapsed_time(start, end=None):
-  delta = (Time(end) - Time(start)).seconds
+def elapsed_time(start, end=None):
+  if not end:
+    end = datetime.datetime.now()
+  delta = (end - start).seconds
   hour = delta / 3600
   min = (delta - 3600 * hour) / 60
-  return '%s:%s' % (str(hour).rjust(2, '0'), str(min).rjust(2, '0'))
-
-class Time(object):
-  
-  def __init__(self, strtime=None):
-    if strtime:
-      self.time = strtime
-    else:
-      self.time = time.strftime(TIME_FORMAT)
-  
-  def __sub__(self, time2):
-    return self.to_datetime() - time2.to_datetime()
-  
-  def __str__(self):
-    return self.time
-  
-  def to_datetime(self):
-    return datetime.datetime.strptime(self.time, TIME_FORMAT)
+  return '%sh%sm' % (hour, min)
 
 if __name__ == '__main__':
   main()
