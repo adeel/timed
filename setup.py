@@ -7,7 +7,7 @@ desc = f.read()
 f.close()
 
 setup(name='timed',
-      version='1.5',
+     version='0.1',
       description="command-line time tracking",
       long_description=desc,
       url='http://github.com/adeel/timed',
@@ -21,8 +21,9 @@ setup(name='timed',
         'Operating System :: POSIX',
         'Topic :: Utilities',
       ],
-      py_modules=['timed'],
+      py_modules=['timed', 'cmdapp'],
       entry_points={'console_scripts': ['timed = timed:main']},
       include_package_data=True,
       data_files=[('', ['README'])],
+      requirements=['PyYAML', 'cmdln']
 )
