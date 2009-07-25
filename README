@@ -2,9 +2,7 @@ timed is a command-line time tracking tool.
 
     timed: print current status
   
-    timed <project-name>: alias for "timed start <project-name>"
-  
-    timed start <project-name>: start tracking for the <project-name> project
+    timed start <project>: start tracking for the <project> project
   
     timed stop: stop tracking for the current project
   
