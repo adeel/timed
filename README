@@ -1,18 +1,19 @@
 timed is a command-line time tracking tool.
 
-    timed: print current status
-  
-    timed start <project>: start tracking for the <project> project
-  
-    timed stop: stop tracking for the current project
-  
-    timed summary: print a summary of hours for all projects
+  timed: print current status
 
-A complete, human-readable (YAML) log is stored in ~/.timed, and can be
-edited.
+  timed start <project>: start tracking for the <project> project
+
+  timed stop: stop tracking for the current project
+
+  timed summary: print a summary of hours for all projects
+  
+  timed help: print this readme file
+
+A human-readable (YAML) log is stored in ~/.timed, and can be edited.
 
 Installation: easy_install timed, or:
 
-    git clone git://github.com/adeel/timed.git
-    cd timed
-    python setup.py install
+  # git clone git://github.com/adeel/timed.git
+  # cd timed
+  # python setup.py install
