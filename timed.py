@@ -30,7 +30,10 @@ class Controller(object):
   
   def __init__(self):
     data = open(DATA_FILE).read()
-    self.logs = yaml.safe_load(data)
+    if data:
+      self.logs = yaml.safe_load(data)
+    else:
+      self.logs = []
   
   def default(self):
     if self.logs:
