@@ -7,6 +7,17 @@ import cmdapp
 
 DATA_FILE = os.path.expanduser('~/.timed')
 TIME_FORMAT = '%H:%M on %d %b %Y'
+HELP = """
+    timed: print current status
+
+    timed start <project>: start tracking for <project>
+
+    timed stop: stop tracking for the current project
+
+    timed summary: print a summary of hours for all projects
+
+    timed help: show this help text
+"""
 
 def main():
   if not os.path.exists(DATA_FILE):
@@ -15,9 +26,7 @@ def main():
 
 @cmdapp.cmd
 def help():
-  readme = pkg_resources.resource_string(
-    pkg_resources.Requirement.parse('timed'), 'README')
-  print readme
+  print HELP
 
 @cmdapp.cmd
 def index():
@@ -35,7 +44,7 @@ def index():
     else:
       summary()
   else:
-    readme()
+    help()
 
 @cmdapp.cmd
 def summary():

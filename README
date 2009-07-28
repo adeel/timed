@@ -2,13 +2,13 @@ timed is a command-line time tracking tool.
 
   timed: print current status
 
-  timed start <project>: start tracking for the <project> project
+  timed start <project>: start tracking for <project>
 
   timed stop: stop tracking for the current project
 
   timed summary: print a summary of hours for all projects
   
-  timed help: print this readme file
+  timed help: print help
 
 A human-readable (YAML) log is stored in ~/.timed, and can be edited.
 
