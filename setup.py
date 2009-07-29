@@ -7,7 +7,7 @@ setup(
   version='0.11',
   description="command-line time tracking",
   long_description=open('README').read(),
-  url='http://github.com/adeel/timed',
+  url='http://soundofemptiness.com/projects/timed',
   author='Adeel Ahmad Khan',
   author_email='adeel2@umbc.edu',
   classifiers=[
