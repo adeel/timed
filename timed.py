@@ -6,7 +6,6 @@ __author__ = 'Adeel Ahmad Khan'
 import sys
 import os.path
 import time, datetime
-import yaml
 import cmdapp
 
 data_file = os.path.expanduser('~/.timed')
@@ -89,16 +88,6 @@ def stop():
     logs[-1]['end'] = end
     save(logs)
 
-def read():
-  data = open(data_file).read()
-  if not data:
-    return []
-  
-  return yaml.safe_load(data)
-
-def save(logs):
-  open(data_file, 'w').write(yaml.dump(logs, default_flow_style=False))
-
 def elapsed_time(start, end=None):
   if not end:
     end = datetime.datetime.now()
@@ -106,6 +95,47 @@ def elapsed_time(start, end=None):
   hour = delta / 3600
   min = (delta - 3600 * hour) / 60
   return '%sh%sm' % (hour, min)
+
+def read():
+  logs = []
+  with open(data_file) as data:
+    try:
+      for line in data:
+        project, line = line.split(':')
+        project = project.strip()
+        
+        start, end = line.split(' - ')
+        start, end = start.strip(), end.strip()
+        
+        if not project or not start:
+          raise SyntaxError()
+        
+        if end:
+          logs.append({'project': project, 'start': start, 'end': end})
+        else:
+          logs.append({'project': project, 'start': start})
+        
+    except ValueError:
+      raise SyntaxError()
+  print logs
+  return logs
+
+def save(logs):
+  file = open(data_file, 'w')
+
+  def format(log):
+    if log.get('end'):
+      return '%s: %s - %s' % (log['project'], log['start'], log['end'])
+    else:
+      return '%s: %s - ' % (log['project'], log['start'])
+
+  dump = '\n'.join((format(log) for log in logs))
+
+  file.write(dump)
+  file.close()
+
+class SyntaxError(Exception):
+  value = 'Syntax error in ~/.timed'
 
 if __name__ == '__main__':
   main()

@@ -20,6 +20,5 @@ setup(
   ],
   py_modules=['timed', 'cmdapp'],
   entry_points={'console_scripts': ['timed = timed:main']},
-  install_requires=['PyYAML'],
   zip_safe=False,
 )
