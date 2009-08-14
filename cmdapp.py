@@ -8,9 +8,16 @@ def main(name, desc):
   program['desc'] = desc
   
   if len(sys.argv) < 2:
-    command, arguments = '', []
+    command, args = '', []
   else:
-    command, arguments = sys.argv[1], sys.argv[2:]
+    command, args = sys.argv[1], sys.argv[2:]
+  
+  options = {}
+  for i, arg in enumerate(args):
+    if arg.startswith('--'):
+      opt = arg.lstrip('--')
+      options[opt] = True
+      del args[i]
   
   if command in handlers:
     handler = handlers[command]
@@ -18,7 +25,7 @@ def main(name, desc):
     handler = help
   
   try:
-    handler(*arguments)
+    handler(*args, **options)
   except Exception as e:
     print e.args
 
