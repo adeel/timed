@@ -8,12 +8,12 @@ import os.path
 import time, datetime
 import cmdapp
 
-data_file = os.path.expanduser('~/.timed')
+log_file = os.path.expanduser('~/.timed')
 time_format = '%H:%M on %d %b %Y'
 
 def main():
-  if not os.path.exists(data_file):
-    open(data_file, 'w').close()  
+  if not os.path.exists(log_file):
+    open(log_file, 'w').close()  
   
   cmdapp.main(name=__name__, desc=__doc__)
 
@@ -98,7 +98,7 @@ def elapsed_time(start, end=None):
 
 def read():
   logs = []
-  with open(data_file) as data:
+  with open(log_file) as data:
     try:
       for line in data:
         project, line = line.split(':')
@@ -121,7 +121,7 @@ def read():
   return logs
 
 def save(logs):
-  file = open(data_file, 'w')
+  file = open(log_file, 'w')
 
   def format(log):
     if log.get('end'):
