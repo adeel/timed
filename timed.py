@@ -1,4 +1,4 @@
-"timed: a command-line time tracking tool"
+"timed: a command-line time tracker"
 
 __name__ = 'timed'
 __author__ = 'Adeel Ahmad Khan'
