@@ -2,7 +2,6 @@ import sys
 import os.path
 import time, datetime
 import yaml
-import pkg_resources
 import cmdapp
 
 DATA_FILE = os.path.expanduser('~/.timed')
