@@ -1,4 +1,4 @@
-timed is a command-line time tracking tool.
+timed is a command-line time tracker.
 
   timed: alias for 'timed status'
   
@@ -19,3 +19,9 @@ Installation: easy_install timed, or:
   # git clone git://github.com/adeel/timed.git
   # cd timed
   # python setup.py install
+
+Release notes:
+
+  0.12: YAML turned out to be pretty slow, so it's been dropped.
+  0.11: Using YAML to store the log.
+  0.10: First release.
