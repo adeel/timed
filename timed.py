@@ -22,7 +22,7 @@ def help():
 
 @cmdapp.cmd
 @cmdapp.default
-def status():
+def status(quiet=False):
   "print current status"
   
   logs = read()
@@ -32,14 +32,20 @@ def status():
       project = last['project']
       start = last.get('start')
       end = datetime.datetime.now()
-      print "working on %s:" % project
-      print "  from    %s" % start.strftime(time_format)
-      print "  to now, %s" % end.strftime(time_format)
-      print "       => %s have elapsed" % elapsed_time(start, end)
+      
+      if not quiet:
+        print "working on %s:" % project
+        print "  from    %s" % start.strftime(time_format)
+        print "  to now, %s" % end.strftime(time_format)
+        print "       => %s have elapsed" % elapsed_time(start, end)
+      else:
+        print project
     else:
-      summary()
+      if not quiet:
+        summary()
   else:
-    help()
+    if not quiet:
+      help()
 
 @cmdapp.cmd
 def summary():
