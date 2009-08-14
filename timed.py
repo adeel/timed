@@ -101,7 +101,7 @@ def read():
   with open(log_file) as data:
     try:
       for line in data:
-        project, line = line.split(':')
+        project, line = line.split(':', 1)
         project = project.strip()
         
         start, end = line.split(' - ')
@@ -110,6 +110,10 @@ def read():
         if not project or not start:
           raise SyntaxError()
         
+        start = datetime.datetime.strptime(start, time_format)
+        if end:
+          end = datetime.datetime.strptime(end, time_format)
+        
         if end:
           logs.append({'project': project, 'start': start, 'end': end})
         else:
@@ -117,25 +121,28 @@ def read():
         
     except ValueError:
       raise SyntaxError()
-  print logs
+  
   return logs
 
 def save(logs):
   file = open(log_file, 'w')
-
+  
   def format(log):
     if log.get('end'):
-      return '%s: %s - %s' % (log['project'], log['start'], log['end'])
+      return '%s: %s - %s' % (log['project'],
+        log['start'].strftime(time_format),
+        log['end'].strftime(time_format))
     else:
-      return '%s: %s - ' % (log['project'], log['start'])
-
+      return '%s: %s - ' % (log['project'],
+        log['start'].strftime(time_format))
+  
   dump = '\n'.join((format(log) for log in logs))
 
   file.write(dump)
   file.close()
 
 class SyntaxError(Exception):
-  value = 'Syntax error in ~/.timed'
+  args = 'Syntax error in ~/.timed'
 
 if __name__ == '__main__':
   main()

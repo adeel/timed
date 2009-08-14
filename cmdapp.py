@@ -20,7 +20,7 @@ def main(name, desc):
   try:
     handler(*arguments)
   except Exception as e:
-    print e.value
+    print e.args
 
 def cmd(handler):
   handlers[handler.__name__] = handler
