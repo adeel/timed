@@ -12,7 +12,7 @@ timed is a command-line time tracking tool.
   
   timed help: print help
 
-A human-readable (YAML) log is stored in ~/.timed, and can be edited.
+A human-readable log is stored in ~/.timed, and can be edited.
 
 Installation: easy_install timed, or:
 
