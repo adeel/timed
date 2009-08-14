@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
   name='timed',
-  version='0.11',
+  version='0.12',
   description="command-line time tracking",
   long_description=open('README').read(),
   url='http://soundofemptiness.com/projects/timed',
