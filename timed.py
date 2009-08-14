@@ -1,34 +1,31 @@
+"timed: a command-line time tracking tool"
+
+__name__ = 'timed'
+__author__ = 'Adeel Ahmad Khan'
+
 import sys
 import os.path
 import time, datetime
 import yaml
 import cmdapp
 
-DATA_FILE = os.path.expanduser('~/.timed')
-TIME_FORMAT = '%H:%M on %d %b %Y'
-HELP = """
-    timed: print current status
-
-    timed start <project>: start tracking for <project>
-
-    timed stop: stop tracking for the current project
-
-    timed summary: print a summary of hours for all projects
-
-    timed help: show this help text
-"""
+data_file = os.path.expanduser('~/.timed')
+time_format = '%H:%M on %d %b %Y'
 
 def main():
-  if not os.path.exists(DATA_FILE):
-    open(DATA_FILE, 'w').close()  
-  cmdapp.main()
+  if not os.path.exists(data_file):
+    open(data_file, 'w').close()  
+  
+  cmdapp.main(name=__name__, desc=__doc__)
 
-@cmdapp.cmd
 def help():
-  print HELP
+  cmdapp.help()
 
 @cmdapp.cmd
-def index():
+@cmdapp.default
+def status():
+  "print current status"
+  
   logs = read()
   if logs:
     last = logs[-1]
@@ -37,8 +34,8 @@ def index():
       start = last.get('start')
       end = datetime.datetime.now()
       print "working on %s:" % project
-      print "  from    %s" % start.strftime(TIME_FORMAT)
-      print "  to now, %s" % end.strftime(TIME_FORMAT)
+      print "  from    %s" % start.strftime(time_format)
+      print "  to now, %s" % end.strftime(time_format)
       print "       => %s have elapsed" % elapsed_time(start, end)
     else:
       summary()
@@ -47,6 +44,8 @@ def index():
 
 @cmdapp.cmd
 def summary():
+  "print a summary of hours for all projects"
+  
   logs = read()
   summary = {}
   for log in logs:
@@ -61,15 +60,19 @@ def summary():
 
 @cmdapp.cmd
 def start(project):
+  "start tracking for <project>"
+  
   logs = read()
   start = datetime.datetime.now()
   logs.append({'project': project, 'start': start})
   save(logs)
   print "starting work on %s" % project
-  print "  at %s" % start.strftime(TIME_FORMAT)
+  print "  at %s" % start.strftime(time_format)
 
 @cmdapp.cmd
 def stop():
+  "stop tracking for the current project"
+  
   logs = read()
   if not logs:
     print "error: no active project"
@@ -79,22 +82,22 @@ def stop():
     start = last.get('start')
     end = datetime.datetime.now()
     print "worked on %s" % project
-    print "  from    %s" % start.strftime(TIME_FORMAT)
-    print "  to now, %s" % end.strftime(TIME_FORMAT)
+    print "  from    %s" % start.strftime(time_format)
+    print "  to now, %s" % end.strftime(time_format)
     print "       => %s elapsed" % elapsed_time(start)
     
     logs[-1]['end'] = end
     save(logs)
 
 def read():
-  data = open(DATA_FILE).read()
+  data = open(data_file).read()
   if not data:
     return []
   
   return yaml.safe_load(data)
 
 def save(logs):
-  open(DATA_FILE, 'w').write(yaml.dump(logs, default_flow_style=False))
+  open(data_file, 'w').write(yaml.dump(logs, default_flow_style=False))
 
 def elapsed_time(start, end=None):
   if not end:
