@@ -19,8 +19,8 @@ def main(name, desc):
   
   try:
     handler(*arguments)
-  except:
-    help()
+  except Exception as e:
+    print e.value
 
 def cmd(handler):
   handlers[handler.__name__] = handler
