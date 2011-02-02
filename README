@@ -30,6 +30,7 @@ Tip: put the name of the active timed project in your bash prompt:
 
 Release notes:
 
+  0.13: No need to use ez_setup.
   0.12: YAML turned out to be pretty slow, so it's been dropped.
   0.11: Using YAML to store the log.
   0.10: First release.

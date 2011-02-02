@@ -1,13 +1,11 @@
-from ez_setup import use_setuptools
-use_setuptools()
 from setuptools import setup
 
 setup(
   name='timed',
-  version='0.12',
+  version='0.13',
   description="command-line time tracking",
   long_description=open('README').read(),
-  url='http://soundofemptiness.com/projects/timed',
+  url='http://adeel.github.com/timed',
   author='Adeel Ahmad Khan',
   author_email='adeel2@umbc.edu',
   classifiers=[
