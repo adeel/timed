@@ -10,7 +10,7 @@ Usage
 
 `timed status`: print current status
 
-`timed start <project>`: start tracking for <project>
+`timed start <project>`: start tracking for `<project>`
 
 `timed stop`: stop tracking for the current project
 
@@ -18,7 +18,7 @@ Usage
 
 `timed help`: print help
 
-A human-readable log is stored in ~/.`timed`, and can be edited.
+A human-readable log is stored in `~/.timed`, and can be edited.
 
 Installation
 ------------
@@ -36,11 +36,17 @@ Tip
 
 Put the name of the active `timed` project in your bash prompt:
 
-    function get_`timed`_project {
-      `timed` status --quiet
+    function get_timed_project {
+      timed status --quiet
     }
     
-    PS1='\u@\h \$(get_`timed`_project) [\w] \n % '
+    PS1='\u@\h \$(get_timed_project) [\w] \n %'
+
+License
+-------
+
+`timed` is released under the **BSD** license. See the file `LICENSE` for
+further information.
 
 Release notes
 -------------
