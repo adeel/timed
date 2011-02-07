@@ -2,23 +2,19 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #EAEAEA;
+  background-color: white;
 }
   #wrapper {
-    width: 500px;
-    overflow: auto;
-    margin: 70px auto 20px;
+    width: 650px;
+    margin: 0 auto 0;
     padding: 10px;
-    background-color: white;
-    border: 1px solid #BABABA;
-    font-family: Georgia, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-shadow: 0 0 0 white;
-    font-size: 1.4em;
   }
-  
+
     h1 {
-      font-size: 112px;
-      font-weight: normal;
+      font-size: 2.5em;
+      font-weight: bold;
       margin: 0;
       text-align: center;
     }
@@ -30,30 +26,44 @@ body {
       h1 a:hover {
         color: #333;
       }
-    
+
     p#desc {
       text-align: center;
-      margin: 0;
-      font-size: 0.9em;
+      margin: 0 0 20px;
+      font-size: 1.2em;
     }
-    
-    #docs {}
-      #docs .row {
-        margin: 10px;
+
+    #docs {
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 10px;
+      padding: 10px 20px;
+    }
+      #docs pre,
+      #docs code {
+        margin: 0;
+        font-family: Monaco, 'Courier New', Courier, monospace;
+        font-size: 1em;
       }
       #docs .command {
-        font-family: Monaco, 'Courier New', Courier, monospace;
+        font-weight: bold;
+        color: black;
       }
-      #docs .desc {
-        margin-left: 20px;
-      }
-    
-    #download {
+
+    #footer {
       text-align: center;
     }
-      #download a {
+      #footer a {
         color: #4568B2;
+        padding-right: 10px;
       }
-      #download a:hover {
+      #footer a:last-child {
+        padding: 0;
+      }
+      #footer a:hover {
         color: #093BAC;
+      }
+
+      #footer .author a {
+        color: #999;
       }

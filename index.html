@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>timed &mdash; a command-line time tracker</title>
+    <title>timed, a command-line time tracker.</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" media="screen, projection"
       href="style.css" />
@@ -10,48 +10,36 @@
   <body>
     <div id="wrapper">
       <h1><a href="http://github.com/adeel/timed">timed</a></h1>
-      <p id="desc">a command-line time tracking tool</p>
+      <p id="desc">a command-line time tracker.</p>
 
       <div id="docs">
-        <div class="row">
-          <div class="command">timed:</div>
-          <div class="desc">print current status</div>
-        </div>
-        
-        <div class="row">
-          <div class="command">timed start &lt;project&gt;:</div>
-          <div class="desc">start tracking for &lt;project&gt;</div>
-        </div>
-        
-        <div class="row">
-          <div class="command">timed stop:</div>
-          <div class="desc">stop tracking for the current project</div>
-        </div>
+        <pre><code>$ <span class="command">timed start myproject</span>
+starting work on myproject
+  at 16:35 on 07 Feb 2011
 
-        <div class="row">
-          <div class="command">timed summary:</div>
-          <div class="desc">print a summary of hours for all projects</div>
-        </div>
+$ <span class="command">timed</span>
+working on myproject:
+  from    16:35 on 07 Feb 2011
+  to now, 17:00 on 07 Feb 2011
+       => 0h25m have elapsed
 
-        <div class="row">
-          <div class="command">timed help:</div>
-          <div class="desc">show this help text</div>
-        </div>
+$ <span class="command">timed stop</span>
+worked on myproject
+  from    16:35 on 07 Feb 2011
+  to now, 17:40 on 07 Feb 2011
+       => 1h5m elapsed
+
+$ <span class="command">timed summary</span>
+  - myproject: 1h5m
+
+$ <span class="command">cat ~/.timed</span>
+myproject: 16:35 on 07 Feb 2011 - 17:40 on 07 Feb 2011</code></pre>
       </div>
-      
-      <div id="download">
-        <p><a href="http://pypi.python.org/pypi/timed/">get timed</a></p>
+
+      <div id="footer">
+        <p><a href="http://github.com/adeel/timed">DOCS</a>
+           <a href="http://pypi.python.org/pypi/timed/">DOWNLOAD</a></p>
+        <p class="author"><a href="http://adeel.ru">Adeel Ahmad Khan</a></p>
       </div>
-    </div>
-    <script type="text/javascript">
-      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-      try {
-        var pageTracker = _gat._getTracker("UA-9508985-1");
-        pageTracker._trackPageview();
-      } catch(err) {}
-    </script>
   </body>
 </html>
