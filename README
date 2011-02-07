@@ -1,0 +1,84 @@
+
+                                     timed
+                          a command-line time tracker.
+
+INTRODUCTION.
+
+    1.  Timed stays out of your way.
+    2.  Timed is as simple as possible.
+
+INSTALLATION.
+
+    Method 1.
+
+        $ git clone git://github.com/adeel/timed.git
+        $ cd timed
+        # python setup.py install
+
+    Method 2.
+
+        # pip install timed
+
+USAGE.
+
+    $ timed start myproject
+    starting work on myproject
+      at 16:35 on 07 Feb 2011
+
+    $ timed
+    working on myproject:
+      from    16:35 on 07 Feb 2011
+      to now, 17:00 on 07 Feb 2011
+           => 0h25m have elapsed
+
+    $ timed stop
+    worked on myproject
+      from    16:35 on 07 Feb 2011
+      to now, 17:40 on 07 Feb 2011
+           => 1h5m elapsed
+
+    $ timed summary
+      - myproject: 1h5m
+
+    $ cat ~/.timed
+    myproject: 16:35 on 07 Feb 2011 - 17:40 on 07 Feb 2011
+
+Remember that ~/.timed is just a text file so the standard UNIX text processing
+tools (grep et al.) are available.
+
+COMMANDS.
+
+    timed: alias for 'timed status'
+
+    timed status:
+           print current status
+
+    timed start <project>:
+           start tracking for <project>
+
+    timed stop:
+           stop tracking for the current project
+
+    timed summary:
+           print a summary of hours for all projects
+
+    timed help:
+           print help
+
+BONUS.  Put the name of the active timed project in your bash prompt by
+putting this in ~/.bashrc:
+
+    function get_timed_project {
+      timed status --quiet
+    }
+
+    PS1='\u@\h \$(get_timed_project) [\w] \n % '
+
+CHANGELOG.
+
+  0.13: Stopped using ez_setup for installation.
+  0.12: YAML turned out to be pretty slow, so it's been dropped.
+  0.11: Using YAML to store the log.
+  0.10: First release.
+
+AUTHOR.  Adeel Ahmad Khan <adeel@adeel.ru>.
