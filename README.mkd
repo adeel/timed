@@ -23,29 +23,29 @@ A human-readable log is stored in ~/.`timed`, and can be edited.
 Installation
 ------------
 
-        $ easy_install timed
+    $ easy_install timed
 
 or:
 
-        $ git clone git://github.com/adeel/timed.git
-        $ cd timed
-        $ python setup.py install
+    $ git clone git://github.com/adeel/timed.git
+    $ cd timed
+    $ python setup.py install
 
 Tip
 ---
 
 Put the name of the active `timed` project in your bash prompt:
 
-        function get_`timed`_project {
-          `timed` status --quiet
-        }
-        
-        PS1='\u@\h \$(get_`timed`_project) [\w] \n % '
+    function get_`timed`_project {
+      `timed` status --quiet
+    }
+    
+    PS1='\u@\h \$(get_`timed`_project) [\w] \n % '
 
 Release notes
 -------------
 
-  0.13: No need to use ez_setup.
-  0.12: YAML turned out to be pretty slow, so it's been dropped.
-  0.11: Using YAML to store the log.
-  0.10: First release.
+* 0.13: No need to use ez_setup.
+* 0.12: YAML turned out to be pretty slow, so it's been dropped.
+* 0.11: Using YAML to store the log.
+* 0.10: First release.
