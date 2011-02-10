@@ -8,13 +8,15 @@ import os.path
 import time, datetime
 import cmdapp
 
+from termcolor import colored, cprint
+
 log_file = os.path.expanduser('~/.timed')
 time_format = '%H:%M on %d %b %Y'
 
 def main():
   if not os.path.exists(log_file):
     open(log_file, 'w').close()  
-  
+
   cmdapp.main(name=__name__, desc=__doc__)
 
 def help():
@@ -24,7 +26,7 @@ def help():
 @cmdapp.default
 def status(quiet=False):
   "print current status"
-  
+
   logs = read()
   if logs:
     last = logs[-1]
@@ -32,12 +34,13 @@ def status(quiet=False):
       project = last['project']
       start = last.get('start')
       end = datetime.datetime.now()
-      
+
       if not quiet:
-        print "working on %s:" % project
-        print "  from    %s" % start.strftime(time_format)
-        print "  to now, %s" % end.strftime(time_format)
-        print "       => %s have elapsed" % elapsed_time(start, end)
+        print "working on %s:" % colored(project, attrs=['bold'])
+        print "  from     %s" % colored(start.strftime(time_format), 'green')
+        print "  to now,  %s" % colored(end.strftime(time_format), 'green')
+        print "        => %s have elapsed" % (
+          colored(elapsed_time(start, end), 'red'))
       else:
         print project
     else:
@@ -50,7 +53,7 @@ def status(quiet=False):
 @cmdapp.cmd
 def summary():
   "print a summary of hours for all projects"
-  
+
   logs = read()
   summary = {}
   for log in logs:
@@ -59,9 +62,12 @@ def summary():
     end = log.get('end', datetime.datetime.now())
     start = log.get('start')
     summary[log['project']] += (end - start).seconds / 60
-  
+
+  width = max([len(p) for p in summary.keys()]) + 3
   for project, min in summary.items():
-    print "  - %s: %sh%sm" % (project, min/60, min - 60 * (min/60))
+    elapsed = "%sh%sm" % (min/60, min - 60 * (min/60))
+    spaces = ' ' * (width - len(project))
+    print "%s%s%s" % (project, spaces, colored(elapsed, 'red'))
 
 @cmdapp.cmd
 def start(project):
@@ -71,8 +77,8 @@ def start(project):
   start = datetime.datetime.now()
   logs.append({'project': project, 'start': start})
   save(logs)
-  print "starting work on %s" % project
-  print "  at %s" % start.strftime(time_format)
+  print "starting work on %s" % colored(project, attrs=['bold'])
+  print "  at %s" % colored(start.strftime(time_format), 'green')
 
 @cmdapp.cmd
 def stop():
@@ -86,10 +92,10 @@ def stop():
     project = last['project']
     start = last.get('start')
     end = datetime.datetime.now()
-    print "worked on %s" % project
-    print "  from    %s" % start.strftime(time_format)
-    print "  to now, %s" % end.strftime(time_format)
-    print "       => %s elapsed" % elapsed_time(start)
+    print "worked on %s" % colored(project, attrs=['bold'])
+    print "  from    %s" % colored(start.strftime(time_format), 'green')
+    print "  to now, %s" % colored(end.strftime(time_format), 'green')
+    print "       => %s elapsed" % colored(elapsed_time(start), 'red')
     
     logs[-1]['end'] = end
     save(logs)
