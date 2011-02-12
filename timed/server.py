@@ -7,6 +7,8 @@ def summarize(records):
     itertools.groupby(sorted(records, key=itemgetter(0)), itemgetter(0))]
 
 def start(project, records):
+  if records and not records[-1][1][1]:
+    return records
   return records + [(project, (datetime.datetime.now(), None))]
 
 def stop(records):
