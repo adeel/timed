@@ -72,8 +72,22 @@ COMMANDS.
     timed help:
            print help
 
+BONUS.  Enable tab completion for project names by putting this in your
+.bashrc:
+
+    shopt -s progcomp                                                               
+    timed_complete() {                                                              
+      local partial                                                                 
+      COMPREPLY=()                                                                  
+      partial=${COMP_WORDS[COMP_CWORD]}                                             
+      COMPREPLY=($(compgen -W '$( timed projects )' -- $partial))                   
+      return 0                                                                      
+    }                                           
+    complete -F timed_complete -o dirnames timed
+
 CHANGELOG.
 
+  0.40: Added tab completion for project names.
   0.35: Added `timed parse`.
   0.30: Complete refactoring.
   0.20: Updated formatting (colors!).
