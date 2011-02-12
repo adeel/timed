@@ -2,6 +2,7 @@
 
 __name__ = 'client'
 
+import sys
 import os.path
 import datetime
 from termcolor import colored
@@ -77,6 +78,22 @@ def stop(logfile, time_format):
     output(records[-1])
 
   save_and_output(read(logfile, time_format))
+
+@cmdapp.cmd
+def parse(logfile, time_format):
+  "parses a stream with text formatted as a Timed logfile and shows a summary"
+
+  records = [server.record_from_txt(line, only_elapsed=True,
+    time_format=time_format) for line in sys.stdin.readlines()]
+
+  # TODO: make this code better.
+  def output(summary):
+    width = max([len(p[0]) for p in summary]) + 3
+    print '\n'.join([
+      "%s%s%s" % (p[0], ' ' * (width - len(p[0])),
+        colored(minutes_to_txt(p[1]), 'red')) for p in summary])
+
+  output(server.summarize(records))
 
 def read(logfile, time_format, only_elapsed=False):
   return [server.record_from_txt(line, only_elapsed=only_elapsed,

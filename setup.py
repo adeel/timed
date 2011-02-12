@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
   name='timed',
-  version='0.3',
+  version='0.35',
   description="command-line time tracking",
   long_description=open('README').read(),
   url='http://adeel.github.com/timed',

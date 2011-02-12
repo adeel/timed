@@ -27,9 +27,9 @@ USAGE.
 
     $ timed
     working on myproject:
-      from    16:35 on 07 Feb 2011
-      to now, 17:00 on 07 Feb 2011
-           => 0h25m have elapsed
+      from     16:35 on 07 Feb 2011
+      to now,  17:00 on 07 Feb 2011
+            => 0h25m have elapsed
 
     $ timed stop
     worked on myproject
@@ -38,13 +38,16 @@ USAGE.
            => 1h5m elapsed
 
     $ timed summary
-      - myproject: 1h5m
+    myproject   1h5m
 
     $ cat ~/.timed
     myproject: 16:35 on 07 Feb 2011 - 17:40 on 07 Feb 2011
 
 Remember that ~/.timed is just a text file so the standard UNIX text
-processing tools (grep et al.) are available.
+processing tools (grep et al.) are available.  For example, to see a summary
+of your work during the month of January 2011:
+
+    $ cat ~/.timed | grep "Jan 2011" | timed parse
 
 COMMANDS.
 
@@ -57,16 +60,21 @@ COMMANDS.
            start tracking for <project>
 
     timed stop:
-           stop tracking for the current project
+           stop tracking for the active project
 
     timed summary:
-           print a summary of hours for all projects
+           show a summary of all projects
+
+    timed parse:
+           parses a stream with text formatted as a Timed logfile and shows a
+           summary
 
     timed help:
            print help
 
 CHANGELOG.
 
+  0.35: Added `timed parse`.
   0.30: Complete refactoring.
   0.20: Updated formatting (colors!).
   0.13: Stopped using ez_setup for installation.
