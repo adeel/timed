@@ -1,0 +1,6 @@
+#!/usr/bin/env python2
+
+import timed.client
+
+if __name__ == '__main__':
+  timed.client.main()

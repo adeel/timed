@@ -3,7 +3,7 @@ import sys
 program = {}
 handlers = {}
 
-def main(name, desc):
+def main(name, desc, config={}):
   program['name'] = name
   program['desc'] = desc
   
@@ -12,22 +12,27 @@ def main(name, desc):
   else:
     command, args = sys.argv[1], sys.argv[2:]
   
-  options = {}
+  options = config
   for i, arg in enumerate(args):
     if arg.startswith('--'):
       opt = arg.lstrip('--')
-      options[opt] = True
+      try:
+        key, val = opt.split('=')
+      except ValueError:
+        key = opt.split('=')
+        val = True
+      options[key] = val
       del args[i]
-  
+
   if command in handlers:
     handler = handlers[command]
   else:
     handler = help
-  
+
   try:
     handler(*args, **options)
   except Exception as e:
-    print e.args[0]
+    print "error: %s" % str(e)
 
 def cmd(handler):
   handlers[handler.__name__] = handler
@@ -37,7 +42,7 @@ def default(handler):
   handlers[''] = handler
   return handler
 
-def help():
+def help(**options):
   subcmds = []
   for name, handler in handlers.items():
     syntax = (program['name'] + ' ' + name).strip()

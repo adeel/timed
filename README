@@ -43,8 +43,8 @@ USAGE.
     $ cat ~/.timed
     myproject: 16:35 on 07 Feb 2011 - 17:40 on 07 Feb 2011
 
-Remember that ~/.timed is just a text file so the standard UNIX text processing
-tools (grep et al.) are available.
+Remember that ~/.timed is just a text file so the standard UNIX text
+processing tools (grep et al.) are available.
 
 COMMANDS.
 
@@ -65,17 +65,10 @@ COMMANDS.
     timed help:
            print help
 
-BONUS.  Put the name of the active timed project in your bash prompt by
-putting this in ~/.bashrc:
-
-    function get_timed_project {
-      timed status --quiet
-    }
-
-    PS1='\u@\h \$(get_timed_project) [\w] \n % '
-
 CHANGELOG.
 
+  0.30: Complete refactoring.
+  0.20: Updated formatting (colors!).
   0.13: Stopped using ez_setup for installation.
   0.12: YAML turned out to be pretty slow, so it's been dropped.
   0.11: Using YAML to store the log.
