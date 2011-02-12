@@ -9,15 +9,20 @@ INTRODUCTION.
 
 INSTALLATION.
 
-    Method 1.
+    Method 1 (from git).
 
         $ git clone git://github.com/adeel/timed.git
         $ cd timed
         # python setup.py install
 
-    Method 2.
+    Method 2 (from pypi).
 
         # pip install timed
+
+    Method 3 (for Arch Linux).  Tom Vincent (@tlvince) has prepared a PKGBUILD
+    which is available at
+
+        <https://github.com/tlvince/pkgbuild/blob/master/python-timed/PKGBUILD>.
 
 USAGE.
 
@@ -97,3 +102,5 @@ CHANGELOG.
   0.10: First release.
 
 AUTHOR.  Adeel Ahmad Khan <adeel@adeel.ru>.
+
+Thanks to Tom Vincent <http://www.tlvince.com/contact/>.
