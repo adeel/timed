@@ -1,30 +1,8 @@
+# timed
 
-                                     timed
-                          a command-line time tracker.
+[Timed](http://github.com/adeel/timed) is a command-line time tracker.
 
-INTRODUCTION.
-
-    1.  Timed stays out of your way.
-    2.  Timed is as simple as possible.
-
-INSTALLATION.
-
-    Method 1 (from git).
-
-        $ git clone git://github.com/adeel/timed.git
-        $ cd timed
-        # python setup.py install
-
-    Method 2 (from pypi).
-
-        # pip install timed
-
-    Method 3 (for Arch Linux).  Tom Vincent (@tlvince) has prepared a PKGBUILD
-    which is available at
-
-        <https://github.com/tlvince/pkgbuild/blob/master/python-timed/PKGBUILD>.
-
-USAGE.
+## Summary
 
     $ timed start myproject
     starting work on myproject
@@ -48,13 +26,23 @@ USAGE.
     $ cat ~/.timed
     myproject: 16:35 on 07 Feb 2011 - 17:40 on 07 Feb 2011
 
-Remember that ~/.timed is just a text file so the standard UNIX text
-processing tools (grep et al.) are available.  For example, to see a summary
-of your work during the month of January 2011:
-
     $ cat ~/.timed | grep "Jan 2011" | timed parse
 
-COMMANDS.
+## Installation
+
+From GitHub:
+
+      $ git clone git://github.com/adeel/timed.git
+      $ cd timed
+      # python setup.py install
+
+From Pypi:
+
+      # pip install timed
+
+For Arch Linux, Tom Vincent (@tlvince) has prepared a [PKGBUILD](https://github.com/tlvince/pkgbuild/blob/master/python-timed/PKGBUILD).
+
+## Usage
 
     timed: alias for 'timed status'
 
@@ -77,8 +65,9 @@ COMMANDS.
     timed help:
            print help
 
-BONUS.  Enable tab completion for project names by putting this in your
-.bashrc:
+## Bonus
+
+Enable tab completion for project names by putting this in your .bashrc:
 
     shopt -s progcomp                                                               
     timed_complete() {                                                              
@@ -90,17 +79,12 @@ BONUS.  Enable tab completion for project names by putting this in your
     }                                           
     complete -F timed_complete -o dirnames timed
 
-CHANGELOG.
+## Thanks
 
-  0.40: Added tab completion for project names.
-  0.35: Added `timed parse`.
-  0.30: Complete refactoring.
-  0.20: Updated formatting (colors!).
-  0.13: Stopped using ez_setup for installation.
-  0.12: YAML turned out to be pretty slow, so it's been dropped.
-  0.11: Using YAML to store the log.
-  0.10: First release.
+Thanks to [Tom Vincent] (http://github.com/tlvince).
 
-AUTHOR.  Adeel Ahmad Khan <adeel@adeel.ru>.
+## License
 
-Thanks to Tom Vincent <http://www.tlvince.com/contact/>.
+Copyright (c) 2011 Adeel Ahmad Khan <adeel@adeel.ru>.
+
+MIT license.
