@@ -108,7 +108,7 @@ def projects(logfile, time_format):
 def read(logfile, time_format, only_elapsed=False):
   return [server.record_from_txt(line, only_elapsed=only_elapsed,
     time_format=time_format) for line in open(
-      os.path.expanduser(logfile)).readlines()]
+      os.path.expanduser(logfile) ,'a+').readlines()]
 
 def write(records, logfile, time_format):
   try:
