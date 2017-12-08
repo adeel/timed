@@ -81,10 +81,10 @@ Enable tab completion for project names by putting this in your .bashrc:
 
 ## Thanks
 
-Thanks to [Tom Vincent] (http://github.com/tlvince).
+Thanks to [Tom Vincent](http://github.com/tlvince).
 
 ## License
 
-Copyright (c) 2011 Adeel Ahmad Khan <adeel@adeel.ru>.
+Copyright (c) 2011 Adeel A. Khan <adeel@yusufzai.me>.
 
 MIT license.
